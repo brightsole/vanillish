@@ -1,0 +1,48 @@
+{
+  "name": "vanillish",
+  "version": "0.0.0",
+  "description": "vanillish",
+  "keywords": [
+    "new",
+    "package",
+    "brightsole"
+  ],
+  "main": "index.js",
+  "repository": "git@github.com:brightsole/vanillish.git",
+  "author": "Drew Showalter <maelstroswim@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "index.js",
+    "dist/index.js",
+    "dist/index.map"
+  ],
+  "scripts": {
+    "lint": "eslint --fix .",
+    "build": "tsc index.ts --outDir dist -d",
+    "precommit": "lint-staged",
+    "prepush": "ava",
+    "test": "ava",
+    "coverage": "nyc --reporter=html --reporter=text ava"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix"
+    ]
+  },
+  "devDependencies": {
+    "@brightsole/eslint-config-lint-node-ts": "0.0.0",
+    "ava": "^3.5.0",
+    "husky": "^0.14.2",
+    "lint-staged": "^10.0.8",
+    "localforage": "^1.7.3",
+    "nyc": "^15.0.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "localforage": "^1.7.3"
+  },
+  "dependencies": {
+    "nanoid": "^2.1.11"
+  }
+}
