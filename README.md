@@ -1,6 +1,6 @@
 # vanillish
 
-[<img src="vanillish.svg?sanitize=true" width=250>]()
+[<img src="vanillish.svg?sanitize=true" height=250>]()
 
 ### What is it?
 <details>
@@ -36,6 +36,7 @@
 #### High priority
 
 1. stop typecasting values, use a typed insert object
+1. replace localforage peerDep with vanillite
 1. test it
     1. create
     1. read
