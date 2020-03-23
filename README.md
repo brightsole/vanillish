@@ -5,11 +5,13 @@
 ### What is it?
 <details>
   <summary>
-    tl;dr: <TODO>
+    <strong>tl;dr:</strong> easy-to-use in-browser CRUD db
   </summary>
   <br />
 
-  A brand new package project! It's a CRUD wrapper around `localforage` or [`@brightsole/vanillite`](https://github.com/brightsole/vanillite). It will allow for a standardized way of interacting with a local store, with advanced crap like querying. It will also eventually do input validation!
+  A brand new package project! It's a CRUD wrapper around [`@brightsole/vanillite`](https://github.com/one19/vanillite).
+  
+  It has a number of methods that make setting, getting, querying, and deleting data a dream!
 
   It's ready for you to add some functionality, and publish it!
 
@@ -19,31 +21,40 @@
 ### How to use it?
 <details>
   <summary>
-    tl;dr: <TODO><code>`yarn && yarn test`</code>
+    <strong>tl;dr:</strong> <code>npm i vanillish</code>
   </summary>
   <br />
 
-  <TODO> Start devving after that!
+  
+
+  | methodName | args | return |
+  |--- | --- |--- |
+  | setItem | StorageItem | Promise(StorageItemWithId) |
+  | getItem | id | Promise(StorageItemWithId) |
+  | getAll | `none` | Promse([StorageItemWithId]) |
+  | deleteItem | id | Promise(`none`) |
+  | deleteAll | `none` | Promise(`none`) |
+  | query | QueryObject | Promise([StorageItemWithId]) |
 
 </details>
 <br/>
 
 ### TODO:
 <details>
-<summary>tl;dr: BOATLOADS</summary>
+  <summary>
+    <strong>tl;dr:</strong> alot; but it's functional
+  </summary>
 <br />
 
 #### High priority
-
-1. stop typecasting values, use a typed insert object
-1. replace localforage peerDep with vanillite
+1. type the query object
 1. test it
     1. create
     1. read
     1. update
     1. delete
     1. very thoroughly test querying, especially deep comparisons like `'dingle.bloop.floobo': ['niner']`
-1. publish it
+1. UNBREAK THE STORAGE LIB - we stopped allowing a variable storage lib to screw down the types and get the dep working. I'd like that unbroken so that you could instantiate it with `localforage` to remove the caching, or `vanillite` to optimise speed with an in-memory cache
 
 #### Low priority
 
