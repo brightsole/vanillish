@@ -1,0 +1,13 @@
+{
+  "outDir": "dist",
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "target":"ES2017",
+    "baseUrl": "."
+  },
+  "files": ["index.ts"]
+}
