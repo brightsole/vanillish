@@ -1,40 +1,44 @@
+import Vanillite from 'vanillite';
 import * as nanoId from 'nanoid';
-import * as localForage from 'localforage';
+import 'localforage';
 
 type StorageObject = {
   id: typeof nanoId;
-  [index: string]: any;
+  [i: string]: any;
+};
+
+type VanillishOptions = {
+  name: string;
 };
 
 class Store {
-  store: LocalForage;
+  store: Vanillite<StorageObject>;
 
-  constructor(options = { name: 'default', storeLib: localForage }) {
-    this.store = options.storeLib.createInstance(options);
+  constructor(options: VanillishOptions) {
+    this.store = new Vanillite(options);
   }
 
-  async setItem(itemData) {
+  async setItem(itemData): Promise<StorageObject> {
     const id = nanoId();
     const savedItem = await this.store.setItem(id, itemData);
     return { id, ...savedItem };
   }
 
-  async getItem(key) {
+  async getItem(key): Promise<StorageObject> {
     const value = await this.store.getItem(key);
-    // TODO: Fix typecasting
-    return { id: key, ...(value as any) };
+    return { id: key, ...value };
   }
 
-  async getAll() {
+  async getAll(): Promise<Array<StorageObject>> {
     const keys = await this.store.keys();
     return Promise.all(keys.map(key => this.getItem(key)));
   }
 
-  deleteItem(key) {
+  deleteItem(key): Promise<void> {
     return this.store.removeItem(key);
   }
 
-  deleteAll() {
+  deleteAll(): Promise<void> {
     return this.store.clear();
   }
 
@@ -63,8 +67,7 @@ class Store {
         return match;
       }, true);
 
-      // TODO: Fix typecasting
-      if (isMatch) accumulator.push({ id: key, ...(value as any) });
+      if (isMatch) accumulator.push({ id: key, ...value });
     });
 
     return accumulator;
