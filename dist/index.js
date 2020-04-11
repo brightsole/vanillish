@@ -2,23 +2,16 @@
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const vanillite_1 = __importDefault(require("vanillite"));
-const nanoId = __importStar(require("nanoid"));
+const nanoid_1 = require("nanoid");
 require("localforage");
 class Store {
     constructor(options) {
         this.store = new vanillite_1.default(options);
     }
     async setItem(itemData) {
-        const id = nanoId();
+        const id = nanoid_1.nanoid();
         const savedItem = await this.store.setItem(id, itemData);
         return Object.assign({ id }, savedItem);
     }

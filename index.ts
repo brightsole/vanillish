@@ -1,5 +1,5 @@
 import Vanillite from 'vanillite';
-import * as nanoId from 'nanoid';
+import { nanoid as nanoId } from 'nanoid';
 import 'localforage';
 
 type StorageObject = {
