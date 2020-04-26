@@ -1,3 +1,4 @@
+import Ajv from 'ajv';
 import Vanillite from 'vanillite';
 import { nanoid as nanoId } from 'nanoid';
 import 'localforage';
@@ -9,8 +10,10 @@ declare type StorageObject = {
 };
 declare type VanillishOptions = {
     name: string;
+    schema?: any;
 };
 declare class Store {
+    validate: Ajv.ValidateFunction;
     store: Vanillite<StorageObject>;
     constructor(options: VanillishOptions);
     setItem(itemData: any): Promise<StorageObject>;

@@ -14,17 +14,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const ajv_1 = __importDefault(require("ajv"));
 const vanillite_1 = __importDefault(require("vanillite"));
 const nanoid_1 = require("nanoid");
 require("localforage");
 class Store {
     constructor(options) {
-        this.store = new vanillite_1.default(options);
+        const { schema } = options, rest = __rest(options, ["schema"]);
+        const ajv = new ajv_1.default({ allErrors: true });
+        this.validate = ajv.compile(schema);
+        this.store = new vanillite_1.default(rest);
     }
     async setItem(itemData) {
         const id = nanoid_1.nanoid();
-        const savedItem = await this.store.setItem(id, itemData);
-        return Object.assign({ id }, savedItem);
+        const item = Object.assign({ id }, itemData);
+        const valid = this.validate(item);
+        if (!valid)
+            throw new Error(this.validate.errors.join(', '));
+        const savedItemData = await this.store.setItem(id, itemData);
+        return Object.assign({ id }, savedItemData);
     }
     async getItem(key) {
         const value = await this.store.getItem(key);

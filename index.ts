@@ -1,3 +1,4 @@
+import Ajv from 'ajv';
 import Vanillite from 'vanillite';
 import { nanoid as nanoId } from 'nanoid';
 import 'localforage';
@@ -11,19 +12,31 @@ type StorageObject = {
 
 type VanillishOptions = {
   name: string;
+  schema?: any;
 };
 
 class Store {
+  validate: Ajv.ValidateFunction;
+
   store: Vanillite<StorageObject>;
 
   constructor(options: VanillishOptions) {
-    this.store = new Vanillite(options);
+    const { schema, ...rest } = options;
+
+    const ajv = new Ajv({ allErrors: true });
+
+    this.validate = ajv.compile(schema);
+    this.store = new Vanillite(rest);
   }
 
   async setItem(itemData): Promise<StorageObject> {
     const id = nanoId();
-    const savedItem = await this.store.setItem(id, itemData);
-    return { id, ...savedItem };
+    const item = { id, ...itemData };
+    const valid = this.validate(item);
+    if (!valid) throw new Error(this.validate.errors.join(', '));
+
+    const savedItemData = await this.store.setItem(id, itemData);
+    return { id, ...savedItemData };
   }
 
   async getItem(key): Promise<StorageObject> {
