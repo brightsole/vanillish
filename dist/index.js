@@ -1,4 +1,15 @@
 "use strict";
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -31,8 +42,13 @@ class Store {
     }
     async query(query) {
         const accumulator = [];
-        const queryEntries = Object.entries(query);
+        const { $limit, $skip } = query, rest = __rest(query, ["$limit", "$skip"]);
+        const queryEntries = Object.entries(rest);
+        let index = 0;
         await this.store.iterate((value, key) => {
+            if ($skip && $skip < index)
+                return undefined;
+            index += index;
             const isMatch = queryEntries.reduce((match, [queryKey, queryValue]) => {
                 const itemParam = value[queryKey];
                 const itemParamIsArray = Array.isArray(itemParam);
@@ -57,6 +73,9 @@ class Store {
             }, true);
             if (isMatch)
                 accumulator.push(Object.assign({ id: key }, value));
+            // a useful quirk of localforage is that any return that isn't undefined will break
+            // the iterator function. returning accumulator should stop iteration no-ops
+            return $limit && $skip === accumulator.length ? accumulator : undefined;
         });
         return accumulator;
     }

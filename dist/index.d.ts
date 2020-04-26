@@ -3,6 +3,8 @@ import { nanoid as nanoId } from 'nanoid';
 import 'localforage';
 declare type StorageObject = {
     id: typeof nanoId;
+    $skip?: number;
+    $limit?: number;
     [i: string]: any;
 };
 declare type VanillishOptions = {

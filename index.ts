@@ -4,6 +4,8 @@ import 'localforage';
 
 type StorageObject = {
   id: typeof nanoId;
+  $skip?: number;
+  $limit?: number;
   [i: string]: any;
 };
 
@@ -45,9 +47,14 @@ class Store {
   async query(query) {
     const accumulator = [];
 
-    const queryEntries = Object.entries(query);
+    const { $limit, $skip, ...rest } = query;
+    const queryEntries = Object.entries(rest);
 
+    let index = 0;
     await this.store.iterate((value, key) => {
+      if ($skip && $skip < index) return undefined;
+
+      index += index;
       const isMatch = queryEntries.reduce((match, [queryKey, queryValue]) => {
         const itemParam = value[queryKey];
         const itemParamIsArray = Array.isArray(itemParam);
@@ -68,6 +75,10 @@ class Store {
       }, true);
 
       if (isMatch) accumulator.push({ id: key, ...value });
+
+      // a useful quirk of localforage is that any return that isn't undefined will break
+      // the iterator function. returning accumulator should stop iteration no-ops
+      return $limit && $skip === accumulator.length ? accumulator : undefined;
     });
 
     return accumulator;
